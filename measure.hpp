@@ -1,0 +1,143 @@
+#include "Arduino.h"
+
+/*
+ * Define Measure as a C++ template so the size of the retained data buffer can
+ * be specified at the time an instance of the templated class is created.
+*/
+template <uint16_t retained>
+class Measure {
+  public:
+    void initialize() {
+      // Initialization function, which might not be necessary
+      int i;
+      for(i=0;i<_capacity;i++) {
+        _values[i] = 5.0;
+      }
+    }
+    // Get the retained value at a particular index. Note that the retention buffer
+    // is managed such that the mostly recently included value is at the last location
+    // in the buffer, with prior values in reverse chronological order from the
+    // end towards the beginning.
+    float getMember(int index) {
+      // Avoid out-of-range index requests
+      if(index < 0) return _values[0];
+      if(index >= _capacity) return _values[_capacity-1];
+      return _values[index];
+    }
+
+    // Get the current (most recently included) value
+    float getCurrent() {
+      return _values[_capacity-1];
+    }
+
+    // Get the size of the internal retention buffer
+    uint16_t getCapacity() {
+      return _capacity;
+    }
+
+    // Returns the number of values held in the retention buffer.
+    uint16_t getStored() {
+      return _stored;
+    }
+
+    // Completely zeroes everything, resetting the accumulation process and
+    // associated calculations (e.g., max, min, average). This also discards
+    // all retained values. 
+    void clear() {
+      int i;
+      _total = _average = 0;
+      _count = 0;
+      _maxvalue = _minvalue = 0.0;
+      _new_min_max = true;
+
+      // Clear retained values by zeroing them
+      for(i=0;i<_capacity;i++) _values[i] = 0.0;
+      _stored = 0;
+    }
+
+    // resetAvg() clears the value, total, count and average but leaves the min
+    // and max values unmodified.  Use resetAvg() to reset the cumulative averaging
+    // behavior, e.g., to begin a new sampling interval, but leave the 
+    // longer term observed max/min values alone.
+    // NOTE: This also discards all retained values.
+    void resetAvg() {
+      _total = _average = 0.0;
+      _count = 0;
+      _stored = 0;
+    }
+
+    uint32_t getCount() {
+      return _count;
+    }
+
+    float getTotal() {
+      return _total;
+    }
+
+    float getMax() {
+      return _maxvalue;
+    }
+
+    float getMin() {
+      return _minvalue;
+    }
+
+    float getAverage() {
+      return _average;
+    }
+
+    void include(float newvalue) {
+      int i;
+
+      // Handle aggregation functionality for the new value
+      _count++; // started with 0
+      _total += newvalue;
+      if(_new_min_max == true) {
+        _maxvalue = _minvalue = newvalue;
+        _new_min_max = false;
+      }
+      else {
+        if(newvalue > _maxvalue) _maxvalue = newvalue;
+        if(newvalue < _minvalue) _minvalue = newvalue;
+      }
+      _average = _total / _count;
+
+      // If only retaining one value, just store it
+      if(_capacity == 1) {
+        _values[0] = newvalue;
+        _stored = 1;
+      }
+      else {
+        // Otherwise shift stored values to make room for newest one...
+        for(i=(_capacity - _stored - 2);i < _capacity-1;i++) {
+          _values[i] = _values[i+1];
+        }
+        // ...and store the newest value
+        _values[_capacity-1] = newvalue;
+        if(_stored < _capacity) _stored++;
+      }
+    }
+
+    void printRetained() {
+      int i;
+      Serial.print("["); Serial.print(_stored);
+      Serial.print(" of "); Serial.print(_capacity);
+      Serial.print("]:(");
+      for(i=(_capacity - _stored);i < _capacity;i++) {
+        if(i!=(_capacity - _stored)) Serial.print(",");
+        Serial.print(_values[i]);
+      }
+      Serial.println(")");
+    }
+  
+  private:
+    float _values[retained]; // Internal retention buffer
+    uint16_t _capacity = retained; // Size of internal retention buffer
+    uint16_t _stored = 0;  // Number of values retained in internal buffer
+    uint32_t _count;  // Number of values included since last clear/reset
+    float _total = 0;
+    float _maxvalue = 0;
+    float _minvalue = 0;
+    float _average = 0;
+    bool _new_min_max = true;
+};
