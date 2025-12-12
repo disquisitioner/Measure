@@ -22,7 +22,7 @@ class.
 
 ### Declaration
 
-`Measure<size> InstanceObject;`
+`Measure<size> InstanceObject;`  
 Declares `InstanceObject` as an instance of the Measure class, with internal retained storage for `size` values (with `size` as an integer).
 
 ### API
@@ -57,11 +57,11 @@ Resets the running average calculation by clearing the count, total, and average
 `void clear()`  
 Clears average, maximum, minimum, total, and count metrics for the Measure, effectively returning it to its state at initial creation. Also removes any values held in retained storage and sets the number of stored values to zero.
 
-`uint16_t getCapacity()`
+`uint16_t getCapacity()`  
 Returns the size of the internal retained storage, which was set when the Measure instance was declared (see above).
 
-`uint16_t getStored()`
+`uint16_t getStored()`  
 Returns the number of values inserted into retained storage (via the `include()` method described above).
 
-`float getMember(int index)`
+`float getMember(int index)`  
 Returns the value in retained storage at location `index`.  Note that retained storage is managed as a "most recent last" array, with the most recently included value in the last location. It may help to think of retained storage as a chart recorder in which the most recent value is always at the end of retained storage with older values stored in reverse time order towards the beginning of the storage array.  Put another way, retained storage holds (at most) the most recent `size` values, where `size` is the value given when the Measure instance was created.
