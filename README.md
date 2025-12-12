@@ -4,7 +4,7 @@ Many of my projects involve reading data from a connected sensor or data
 source, keeping track of maximum and minimum values observed, calculating 
 averages or counts of results and sometimes graphing recently recorded 
 values. I found I was writing the same code over and over, and at one 
-point created a [template application](https://github.com/disquisitioner/SensorHelper) to use for deailng with sensors.
+point created a [template application](https://github.com/disquisitioner/SensorHelper) to use for dealing with sensors.
 
 One piece of that SensorHelper template has proven useful in a number of 
 other projects, and that's the Measure utility class that streamlines 
