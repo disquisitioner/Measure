@@ -43,7 +43,7 @@ Returns the minimum value included in the Measure thus far.  Minimum tracking ca
 Returns the average of all values included in the Measure thus far.  Average tracking can be reset with either the `resetAverage()` function, which just resets running average calculation, or the `clear()` function (see below).
 
 `float getCurrent()`  
-Returns the most recent value included in the Measure accumulation.
+Returns the most recent retained value in the Measure accumulation.
 
 `float getTotal()`  
 Returns the running sum of all values included in the Measure thus far.
@@ -52,10 +52,12 @@ Returns the running sum of all values included in the Measure thus far.
 Returns the number of values included in the Measure since it was created or most recently cleared.
 
 `void resetAverage()`  
-Resets the running average calculation by clearing the count, total, and average values as well as the most recently included (current) value.
+Resets the running average calculation by clearing the count, total, and average values as well as the most recently included (current) value. Does not reset 
+tracking of maximum and minimum included values so only the averaging process is
+impacted. To reset averaging and also reset maximum and minimum tracking use the `clear()` function. Also does not clear or impact values in retained storage. To delete all retained values use the `deleteRetained()` function.
 
 `void clear()`  
-Clears average, maximum, minimum, total, and count metrics for the Measure, effectively returning it to its state at initial creation. Also removes any values held in retained storage and sets the number of stored values to zero.
+Clears average, maximum, minimum, total, and count metrics for the Measure, effectively returning those operations to an unused initial state. Does not remove or otherwise alter values held in retained storage. To delete all retained values use the 'deleteRetained()` function.
 
 `uint16_t getCapacity()`  
 Returns the size of the internal retained storage, which was set when the Measure instance was declared (see above).
@@ -65,3 +67,6 @@ Returns the number of values inserted into retained storage (via the `include()`
 
 `float getMember(int index)`  
 Returns the value in retained storage at location `index`.  Note that retained storage is managed as a "most recent last" array, with the most recently included value in the last location. It may help to think of retained storage as a chart recorder in which the most recent value is always at the end of retained storage with older values stored in reverse time order towards the beginning of the storage array.  Put another way, retained storage holds (at most) the most recent `size` values, where `size` is the value given when the Measure instance was created.
+
+`void deleteRetained()`
+Deletes all values held in the Member object's retained storage and sets the count of retained values to zero.  Use this to reset the accumulation of included values. Values deleted cannot be recovered.  The separation of behaviors for `clear()`, `resetAverage()`, and `deleteRetained()` is to allow full control of managing running calculation of average, minimum, and maximum values as well as the presumably separate retention of recent values (as might be essential for graphing or otherwise post-processing retained data).

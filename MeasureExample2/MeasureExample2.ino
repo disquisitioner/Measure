@@ -3,7 +3,8 @@
 // (You should therefore remove the "../" relative path reference used here.)
 #include "../measure.hpp"
 
-// Create a Measure object with storage for 12 retained values of measured temperature
+// Create Measure objects for our sensor readings, and with arbitrarily 
+// different amounts of retained storage just to demo how that works
 Measure<6> Temperature;
 Measure<12> CO2;
 Measure <1> Humidity;
@@ -32,6 +33,8 @@ void setup() {
 
   // Overview -- how much room do we have for stored values?
   Serial.print("Temperature measure capacity: "); Serial.println(Temperature.getCapacity());
+  Serial.print("Humidity measure capacity   : "); Serial.println(Humidity.getCapacity());
+  Serial.print("CO2 measure capacity        : "); Serial.println(CO2.getCapacity());
 
 }
 
@@ -43,54 +46,66 @@ void loop() {
   readSensor();
   blinkLED();
   numSamples++;
-  Serial.print("Temperature: "); Serial.println(ambientTemperatureF);
-  Serial.print("Humidity.  : "); Serial.println(ambientHumidity);
-  Serial.print("CO2.       : "); Serial.println(ambientCO2);
-
+  Serial.print("Temperature: "); Serial.print(ambientTemperatureF);
+  Serial.print(", Humidity: "); Serial.print(ambientHumidity);
+  Serial.print(", CO2: "); Serial.println(ambientCO2);
 
   // Include the latest simulated sensor readings in the appropriate Measure object
   Temperature.include(ambientTemperatureF);
   Humidity.include(ambientHumidity);
   CO2.include(ambientCO2);
 
-  // Every five read values let's report min, max, and average sensor values...
+  // Every five read values let's report min, max, and average sensor values over
+  // those five reads.  Also display the retained storage for each Measure to show
+  // how the values there are managed
   if(numSamples >= 5) {
     Serial.println("Reporting: ");
-    Serial.print("Temperature:");
+    Serial.print("Temperature: ");
     Serial.print(Temperature.getAverage()); Serial.print(" avg, ");
     Serial.print(Temperature.getMin()); Serial.print(" min, ");
     Serial.print(Temperature.getMax()); Serial.println(" max");
-    Serial.print("Stored: [");
-    for(i=Temperature.getCapacity()-Temperature.getStored();i<Temperature.getCapacity();i++) {
-      Serial.print(Temperature.getMember(i));
-    }
-    Serial.print("] ");
-    Serial.print(Temperature.getStored()); Serial.print(" of "); 
-    Serial.println(Temperature.getCapacity()); 
-
-    Serial.print("Humidity:");
-    Serial.print(Humidity.getAverage()); Serial.print(" avg, ");
-    Serial.print(Humidity.getMin()); Serial.print(" min, ");
-    Serial.print(Humidity.getMax()); Serial.println(" max");
-
-    Serial.print("CO2:");
-    Serial.print(CO2.getAverage()); Serial.print(" avg, ");
-    Serial.print(CO2.getMin()); Serial.print(" min, ");
-    Serial.print(CO2.getMax()); Serial.println(" max");
-    
-    // ...and the retained values to show we've kept the right number of readings in proper order
-    Serial.print("Stored: [");
+    Serial.print("    Stored: [");
     for(i=0;i<Temperature.getCapacity();i++) {
       if(i != 0) Serial.print(",");
       Serial.print(Temperature.getMember(i));
     }
     Serial.print("] ");
     Serial.print(Temperature.getStored()); Serial.print(" of "); 
-    Serial.println(Temperature.getCapacity());
+    Serial.println(Temperature.getCapacity()); 
 
-    // Clear the Measure object for Temperature, resetting min/max/avg/count tracking
-    // and emptying the retained values storage.
+    Serial.print("Humidity: ");
+    Serial.print(Humidity.getAverage()); Serial.print(" avg, ");
+    Serial.print(Humidity.getMin()); Serial.print(" min, ");
+    Serial.print(Humidity.getMax()); Serial.println(" max");
+    Serial.print("    Stored: [");
+    for(i=0;i<Humidity.getCapacity();i++) {
+      if(i != 0) Serial.print(",");
+      Serial.print(Humidity.getMember(i));
+    }
+    Serial.print("] ");
+    Serial.print(Humidity.getStored()); Serial.print(" of "); 
+    Serial.println(Humidity.getCapacity()); 
+
+    Serial.print("CO2: ");
+    Serial.print(CO2.getAverage()); Serial.print(" avg, ");
+    Serial.print(CO2.getMin()); Serial.print(" min, ");
+    Serial.print(CO2.getMax()); Serial.println(" max");
+    Serial.print("    Stored: [");
+    for(i=0;i<CO2.getCapacity();i++) {
+      if(i != 0) Serial.print(",");
+      Serial.print(CO2.getMember(i));
+    }
+    Serial.print("] ");
+    Serial.print(CO2.getStored()); Serial.print(" of "); 
+    Serial.println(CO2.getCapacity()); 
+
+    // Clear the Measure objects, resetting min/max/avg/count tracking
+    // but preserving the retained values storage. (To clear retained
+    // storage need to call the deleteRetained() method explicitly.)
     Temperature.clear();
+    Humidity.clear();
+    CO2.clear();
+    numSamples = 0;
   }
 
   // Delay for 30 seconds

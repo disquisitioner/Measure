@@ -25,7 +25,7 @@ class Measure {
       return _values[index];
     }
 
-    // Get the current (most recently included) value
+    // Get the current (most recently retained) value
     float getCurrent() {
       return _values[_capacity-1];
     }
@@ -41,28 +41,38 @@ class Measure {
     }
 
     // Completely zeroes everything, resetting the accumulation process and
-    // associated calculations (e.g., max, min, average). This also discards
-    // all retained values. 
+    // associated calculations (e.g., max, min, average). 
+    // NOTE: This does not discard retained values. Use the deleteRetained() method
+    //       to do that.
     void clear() {
-      int i;
       _total = _average = 0;
       _count = 0;
       _maxvalue = _minvalue = 0.0;
       _new_min_max = true;
 
-      // Clear retained values by zeroing them
-      for(i=0;i<_capacity;i++) _values[i] = 0.0;
-      _stored = 0;
+
     }
 
     // resetAvg() clears the value, total, count and average but leaves the min
     // and max values unmodified.  Use resetAvg() to reset the cumulative averaging
     // behavior, e.g., to begin a new sampling interval, but leave the 
     // longer term observed max/min values alone.
-    // NOTE: This also discards all retained values.
+    // NOTE: This does not discard retained values. Use the deleteRetained() method
+    //       to do that.
     void resetAvg() {
       _total = _average = 0.0;
       _count = 0;
+      _stored = 0;
+    }
+
+    // Discard all retained values and reset the retention counter to zero. This
+    // doesn't happen automatically as part of clear() or resetAvg() to let the
+    // application decide whether/when to abandon retained values as they might
+    // be used separately from reporting average/min/max (e.g., for graphing).
+    void deleteRetained() {
+      int i;
+      // Clear retained values by zeroing them
+      for(i=0;i<_capacity;i++) _values[i] = 0.0;
       _stored = 0;
     }
 
