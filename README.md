@@ -57,7 +57,7 @@ tracking of maximum and minimum included values so only the averaging process is
 impacted. To reset averaging and also reset maximum and minimum tracking use the `clear()` function. Also does not clear or impact values in retained storage. To delete all retained values use the `deleteRetained()` function.
 
 `void clear()`  
-Clears average, maximum, minimum, total, and count metrics for the Measure, effectively returning those operations to an unused initial state. Does not remove or otherwise alter values held in retained storage. To delete all retained values use the 'deleteRetained()` function.
+Clears average, maximum, minimum, total, and count metrics for the Measure, effectively returning those operations to an unused initial state. Does not remove or otherwise alter values held in retained storage. To delete all retained values use the `deleteRetained()` function.
 
 `uint16_t getCapacity()`  
 Returns the size of the internal retained storage, which was set when the Measure instance was declared (see above).
@@ -69,4 +69,8 @@ Returns the number of values inserted into retained storage (via the `include()`
 Returns the value in retained storage at location `index`.  Note that retained storage is managed as a "most recent last" array, with the most recently included value in the last location. It may help to think of retained storage as a chart recorder in which the most recent value is always at the end of retained storage with older values stored in reverse time order towards the beginning of the storage array.  Put another way, retained storage holds (at most) the most recent `size` values, where `size` is the value given when the Measure instance was created.
 
 `void deleteRetained()`
-Deletes all values held in the Member object's retained storage and sets the count of retained values to zero.  Use this to reset the accumulation of included values. Values deleted cannot be recovered.  The separation of behaviors for `clear()`, `resetAverage()`, and `deleteRetained()` is to allow full control of managing running calculation of average, minimum, and maximum values as well as the presumably separate retention of recent values (as might be essential for graphing or otherwise post-processing retained data).
+Deletes all values held in the Member object's retained storage and sets the count of retained values to zero.  Use this to reset the ongoing retention of included values. Values deleted cannot be recovered.  The separation of behaviors for `clear()`, `resetAverage()`, and `deleteRetained()` is to allow full control of managing running calculation of average, minimum, and maximum values as well as the presumably separate retention of recent values (as might be essential for graphing or otherwise post-processing retained data).
+
+### Examples
+
+Two example Arduino sketches included here illustrate how to use the Measure class. The first, `MeasureExample` demonstrates the basics of using a single Measure instance to aggregate and summarize values read from a (simulated) sensor. The second, `MeasureExample2`, includes three different Measure class instances each with a different declared size for retained data storage.  It aims to showcase how retained data is accumulated over time, preserving the same sample and average cadence approach used in `MeasureExample`.
