@@ -1,7 +1,5 @@
-// NOTE: In actual use measure.hpp will be in the same folder as your sketch,
-// including if you've copied this example for further tinkering.
-// (You should therefore remove the "../" relative path reference used here.)
-#include "../measure.hpp"
+// NOTE: Include the Measure library header file (which should be installed locally)
+#include <Measure.hpp>
 
 // Create a Measure object with storage for 12 retained values of measured temperature
 Measure<6> Temperature;

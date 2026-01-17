@@ -1,13 +1,11 @@
-// NOTE: In actual use measure.hpp will be in the same folder as your sketch,
-// including if you've copied this example for further tinkering.
-// (You should therefore remove the "../" relative path reference used here.)
-#include "../measure.hpp"
+// NOTE: Include the Measure library header file (which should be installed locally)
+#include <Measure.hpp>
 
 // Create Measure objects for our sensor readings, and with arbitrarily 
 // different amounts of retained storage just to demo how that works
-Measure<6> Temperature;
-Measure<12> CO2;
-Measure <1> Humidity;
+Measure<6> Temperature;  // Manage temperature readings with retained storage for 6
+Measure<12> CO2;         // Manage carbon dioxide readings with retained storage for 12
+Measure Humidity;        // Manage humidity readings, defaults to 1 retained storage location
 
 // Globals to ease gathering and manipulating sensor readings
 float ambientTemperatureF, ambientHumidity, ambientCO2;

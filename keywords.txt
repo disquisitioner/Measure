@@ -1,0 +1,15 @@
+Measure	KEYWORD1
+getMember	KEYWORD2
+getCurrent	KEYWORD2
+getCapacity	KEYWORD2
+getStored	KEYWORD2
+clear	KEYWORD2
+resetAverage	KEYWORD2
+deleteRetained	KEYWORD2
+getCount	KEYWORD2
+getTotal	KEYWORD2
+getMax	KEYWORD2
+getMin	KEYWORD2
+getAverage	KEYWORD2
+include	KEYWORD2
+begin KEYWORD2

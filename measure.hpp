@@ -1,23 +1,36 @@
-#include "Arduino.h"
+/*
+ * Measure.h - Library to help manage accumulating data from sensors or similar sources
+ * Author: David Bryant <david@disquiry.com>
+ * Version: 0.9.0
+ * Date: January 17, 2026
+ */
+
+#ifndef MEASURE_HPP
+#define MEASURE_HPP
+
+#include <Arduino.h>
 
 /*
  * Define Measure as a C++ template so the size of the retained data buffer can
  * be specified at the time an instance of the templated class is created.
 */
-template <uint16_t retained>
+template <uint16_t retained = 1> // Defaults to 1 retained storage location
 class Measure {
   public:
-    void initialize() {
-      // Initialization function, which might not be necessary
+    void begin() {
+      // Initialization function, which might not be necessary (TODO)
       int i;
       for(i=0;i<_capacity;i++) {
-        _values[i] = 5.0;
+        _values[i] = 0.0;
       }
     }
     // Get the retained value at a particular index. Note that the retention buffer
     // is managed such that the mostly recently included value is at the last location
     // in the buffer, with prior values in reverse chronological order from the
     // end towards the beginning.
+    // TODO: Currently returns value at location in retatined storage whether
+    //       actual included data is there or not. Could enhance to return an
+    //       out-of-range or error indicator if referencing an unincluded location.
     float getMember(int index) {
       // Avoid out-of-range index requests
       if(index < 0) return _values[0];
@@ -40,8 +53,9 @@ class Measure {
       return _stored;
     }
 
-    // Completely zeroes everything, resetting the accumulation process and
-    // associated calculations (e.g., max, min, average). 
+    // Completely resets all accumulation processing and associated calculations
+    // (e.g., max, min, average, count, total) so that the next included value
+    // will restart those operations.
     // NOTE: This does not discard retained values. Use the deleteRetained() method
     //       to do that.
     void clear() {
@@ -62,7 +76,6 @@ class Measure {
     void resetAvg() {
       _total = _average = 0.0;
       _count = 0;
-      _stored = 0;
     }
 
     // Discard all retained values and reset the retention counter to zero. This
@@ -151,3 +164,5 @@ class Measure {
     float _average = 0;
     bool _new_min_max = true;
 };
+
+#endif // MEASURE_H
