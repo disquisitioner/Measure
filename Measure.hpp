@@ -109,6 +109,19 @@ class Measure {
       return _average;
     }
 
+    /**************************************************************************/
+    /*!
+        @brief  Include a new value in the Measure accumulation.
+                This function adds a new measurement to the ongoing
+                accumulation, incorporating it in the running average and
+                seeing if it is a new maximum or minimum observed value.
+        @param  newvalue
+                The value to be added to the accumulation and checked as 
+                a possible new maximum or minimum. The new value is also
+                added to the Measure's retained storage.
+
+    */
+    /**************************************************************************/
     void include(float newvalue) {
       int i;
 
