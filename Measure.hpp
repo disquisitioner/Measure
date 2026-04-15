@@ -128,6 +128,7 @@ class Measure {
       // Handle aggregation functionality for the new value
       _count++; // started with 0
       _total += newvalue;
+
       if(_new_min_max == true) {
         _maxvalue = _minvalue = newvalue;
         _new_min_max = false;
@@ -138,19 +139,31 @@ class Measure {
       }
       _average = _total / _count;
 
-      // If only retaining one value, just store it
+      // If only retaining one value, just store it and return 
       if(_capacity == 1) {
         _values[0] = newvalue;
         _stored = 1;
+        return;
       }
-      else {
-        // Otherwise shift stored values to make room for newest one...
-        for(i=(_capacity - _stored - 2);i < _capacity-1;i++) {
-          _values[i] = _values[i+1];
+
+      // Otherwise shift stored values to make room for newest one...
+
+      // Number of valid retained values currently in buffer
+      const uint16_t valid = (_stored < _capacity) ? _stored : _capacity;
+
+      // Shift only the valid retained values left by one
+      if (valid > 0) {
+        const uint16_t start = _capacity - valid;
+        for (uint16_t i = start; i < _capacity - 1; i++) {
+          _values[i] = _values[i + 1];
         }
-        // ...and store the newest value
-        _values[_capacity-1] = newvalue;
-        if(_stored < _capacity) _stored++;
+      }
+
+      // ...and then store the newest value at the end
+      _values[_capacity-1] = newvalue;
+
+      if(_stored < _capacity) {
+        _stored++;
       }
     }
 
@@ -170,7 +183,7 @@ class Measure {
     float _values[retained]; // Internal retention buffer
     uint16_t _capacity = retained; // Size of internal retention buffer
     uint16_t _stored = 0;  // Number of values retained in internal buffer
-    uint32_t _count;  // Number of values included since last clear/reset
+    uint32_t _count = 0;   // Number of values included since last clear/reset
     float _total = 0;
     float _maxvalue = 0;
     float _minvalue = 0;
