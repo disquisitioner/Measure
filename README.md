@@ -1,3 +1,5 @@
+[![Arduino Lint Action](https://github.com/disquisitioner/Measure/actions/workflows/arduino-lint-action.yml/badge.svg)](https://github.com/disquisitioner/Measure/actions/workflows/arduino-lint-action.yml)
+
 # Measure
 
 Many of my projects involve reading data from a connected sensor or data 
@@ -17,6 +19,14 @@ for recent values and have that storage configured at the time an instance
 of the class is declared. Check out the included example applications to see 
 how that's done and to get familiar with other capabilities of the Measure 
 class.
+
+## Arduino Library
+
+Measure is packaged as an Arduino library, allowing it to be easily 
+incorporated into a sketch using the Arduino IDE and shared across
+sketches on a single development machine. At present the Measure
+library must be [manually installed](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries/#manual-installation) but a future version will be
+integrated with the Arduino IDE and available through its Library Manager.
 
 ## Using the Measure class
 
