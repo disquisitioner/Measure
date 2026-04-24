@@ -1,0 +1,10 @@
+name: Arduino Lint Action
+run-name: ${{ github.actor }} is verifying Arduino Library Manager readiness
+on: [push, pull_request]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: arduino/arduino-lint-action@v2
+          
