@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved `MeasureExample` to serve as a more complete test tool for validating management of retained storage.
 
 
-## [0.9.1] - 2026-4-25
+## 0.9.1 - 2026-4-25
 
 ### Added
 
@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adopted /examples and /src subfolder structure in order to conform
 to the [Arduino Library Specification](https://arduino.github.io/arduino-cli/1.4/library-specification/)
 
-## [0.9.0] - 2025-1-17
+## 0.9.0 - 2025-1-17
 
 ### Added
 - Initial packaging as an Arduino Library
@@ -35,4 +35,4 @@ to the [Arduino Library Specification](https://arduino.github.io/arduino-cli/1.4
 ### Changed
 - Restructured as an .hpp file to enable C++ template usage
 
-[Unreleased]: https://github.com/disquisitioner/Measure/compare/0.9.1...HEAD
+[Unreleased]: https://github.com/disquisitioner/Measure/compare/v0.9.1...HEAD
