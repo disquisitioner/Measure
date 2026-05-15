@@ -34,3 +34,5 @@ to the [Arduino Library Specification](https://arduino.github.io/arduino-cli/1.4
 
 ### Changed
 - Restructured as an .hpp file to enable C++ template usage
+
+[Unreleased]: https://github.com/disquisitioner/Mesure/0.9.1...HEAD
