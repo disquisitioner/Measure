@@ -148,17 +148,10 @@ class Measure {
 
       // Otherwise shift stored values to make room for newest one...
 
-      // Number of valid retained values currently in buffer
-      const uint16_t valid = (_stored < _capacity) ? _stored : _capacity;
-
-      // Shift only the valid retained values left by one
-      if (valid > 0) {
-        const uint16_t start = _capacity - valid;
-        for (uint16_t i = start; i < _capacity - 1; i++) {
+      uint16_t start = (_stored == _capacity) ? 0 : (_capacity - _stored - 1);
+      for(uint16_t i = start; i < (_capacity - 1) ; i++ ) {
           _values[i] = _values[i + 1];
-        }
       }
-
       // ...and then store the newest value at the end
       _values[_capacity-1] = newvalue;
 

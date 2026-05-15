@@ -30,7 +30,7 @@ void setup() {
 
   // Overview -- how much room do we have for stored values?
   Serial.print("Temperature measure capacity: "); Serial.println(Temperature.getCapacity());
-
+  Serial.println("----- Sampling -----");
 }
 
 void loop() {
@@ -41,9 +41,9 @@ void loop() {
   readSensor();
   blinkLED();
   numSamples++;
-  Serial.print("Temperature: "); Serial.println(ambientTemperatureF);
-  Serial.print("Humidity.  : "); Serial.println(ambientHumidity);
-  Serial.print("CO2.       : "); Serial.println(ambientCO2);
+  Serial.print("Temperature: "); Serial.print(ambientTemperatureF);
+  Serial.print(", Humidity: "); Serial.print(ambientHumidity);
+  Serial.print(", CO2: "); Serial.println(ambientCO2);
 
 
   // Include the latest simulated sensor readings in the appropriate Measure object
@@ -53,30 +53,15 @@ void loop() {
 
   // Every five read values let's report min, max, and average sensor values...
   if(numSamples >= 5) {
-    Serial.println("Reporting: ");
-    Serial.print("Temperature:");
+    Serial.println("---------------");
+    Serial.println("*** Reporting ***");
+    Serial.print("Temperature: ");
     Serial.print(Temperature.getAverage()); Serial.print(" avg, ");
     Serial.print(Temperature.getMin()); Serial.print(" min, ");
     Serial.print(Temperature.getMax()); Serial.println(" max");
-    Serial.print("Stored: [");
-    for(i=Temperature.getCapacity()-Temperature.getStored();i<Temperature.getCapacity();i++) {
-      Serial.print(Temperature.getMember(i));
-    }
-    Serial.print("] ");
-    Serial.print(Temperature.getStored()); Serial.print(" of "); 
-    Serial.println(Temperature.getCapacity()); 
-
-    Serial.print("Humidity:");
-    Serial.print(Humidity.getAverage()); Serial.print(" avg, ");
-    Serial.print(Humidity.getMin()); Serial.print(" min, ");
-    Serial.print(Humidity.getMax()); Serial.println(" max");
-
-    Serial.print("CO2:");
-    Serial.print(CO2.getAverage()); Serial.print(" avg, ");
-    Serial.print(CO2.getMin()); Serial.print(" min, ");
-    Serial.print(CO2.getMax()); Serial.println(" max");
+    Temperature.printRetained();  //  Just shows the included values (not all retained storage)
     
-    // ...and the retained values to show we've kept the right number of readings in proper order
+    // ...and all retained storage to show we've kept the right number of readings in proper order
     Serial.print("Stored: [");
     for(i=0;i<Temperature.getCapacity();i++) {
       if(i != 0) Serial.print(",");
@@ -86,13 +71,42 @@ void loop() {
     Serial.print(Temperature.getStored()); Serial.print(" of "); 
     Serial.println(Temperature.getCapacity());
 
+    // Now summarize Humidity and CO2
+    Serial.print("Humidity: ");
+    Serial.print(Humidity.getAverage()); Serial.print(" avg, ");
+    Serial.print(Humidity.getMin()); Serial.print(" min, ");
+    Serial.print(Humidity.getMax()); Serial.println(" max");
+    Humidity.printRetained();
+
+    Serial.print("CO2: ");
+    Serial.print(CO2.getAverage()); Serial.print(" avg, ");
+    Serial.print(CO2.getMin()); Serial.print(" min, ");
+    Serial.print(CO2.getMax()); Serial.println(" max");
+    CO2.printRetained();
+    // ...and all retained storage to show we've kept the right number of readings in proper order
+    Serial.print("Stored: [");
+    for(i=0;i<CO2.getCapacity();i++) {
+      if(i != 0) Serial.print(",");
+      Serial.print(CO2.getMember(i));
+    }
+    Serial.print("] ");
+    Serial.print(CO2.getStored()); Serial.print(" of "); 
+    Serial.println(CO2.getCapacity());
+
+    Serial.println("***************");
+    Serial.println("----- Sampling -----");
+
     // Clear the Measure object for Temperature, resetting min/max/avg/count tracking
-    // and emptying the retained values storage.
+    // Also empty the Temperature retained values storage.
     Temperature.clear();
+    Temperature.deleteRetained();
+
+    // And reset sample counter to reset reporting interval
+    numSamples = 0;
   }
 
-  // Delay for 30 seconds
-  delay(30000);
+  // Delay for 10 seconds
+  delay(10000);
 
 }
 
